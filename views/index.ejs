@@ -7,21 +7,44 @@
   <title>DishDelight</title>
 </head>
 <body>
-  <h1>Ingredient Search</h1>
-  <form action="/search" method="post">
-    <input type="text" name="searchQuery" placeholder="Enter Main ingredients">
+  
+  <form id="search-form">
+    <input type="text" id="searchQuery" placeholder="Enter ingredients">
     <button type="submit">Search</button>
   </form>
 
-  <% if (recipes.length > 0) { %>
-    <h2>You Can Prepare:</h2>
-    <% recipes.forEach(recipe => { %>
-      <div class="recipe-card">
-        <h3><%= recipe.name %></h3>
-        <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
-        <p><strong>Directions:</strong> <%= recipe.directions %></p>
-      </div>
-    <% }) %>
-  <% } %>
-</body>
+<div id="results"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.getElementById('search-form');
+  const resultsContainer = document.getElementById('results');
+  
+  searchForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const searchQuery = document.getElementById('searchQuery').value;
+    
+    try {
+      const response = await fetch(`/search?query=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+      
+      // Update results container with fetched data
+      resultsContainer.innerHTML = '';
+      data.forEach(recipe => {
+        resultsContainer.innerHTML += `
+          <div class="recipe-card">
+            <h3>${recipe.name}</h3>
+            <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+            <p><strong>Directions:</strong> ${recipe.directions}</p>
+          </div>
+        `;
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      resultsContainer.innerHTML = 'An error occurred';
+    }
+  });
+});
+</script>
+
 </html>

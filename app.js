@@ -19,25 +19,28 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); // Create a 'public' folder for stylesheets and other static files
 
+// Update the rendering route for the search page
 app.get('/', (req, res) => {
   res.render('index', { recipes: [] }); // Initialize with an empty array for recipes
 });
 
-app.post('/search', async (req, res) => {
-  const searchQuery = req.body.searchQuery;
+// Modify the AJAX route to /search
+app.get('/search', async (req, res) => {
+  const searchQuery = req.query.query;
 
   try {
     const result = await client.query(
-      `SELECT * FROM recipes WHERE ingredients ILIKE $1`,
+      `SELECT * FROM recipes WHERE Ingredients ILIKE $1`,
       [`%${searchQuery}%`]
     );
 
-    res.render('index', { recipes: result.rows, searchQuery: searchQuery });
+    res.json(result.rows);
   } catch (error) {
     console.error('Error executing query:', error);
-    res.send('An error occurred');
+    res.status(500).json({ error: 'An error occurred' });
   }
 });
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
