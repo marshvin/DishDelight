@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css"> <!-- Link your stylesheet -->
+  <title>DishDelight</title>
+</head>
+<body>
+  <h1>Ingredient Search</h1>
+  <form action="/search" method="post">
+    <input type="text" name="searchQuery" placeholder="Enter Main ingredients">
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (recipes.length > 0) { %>
+    <h2>You Can Prepare:</h2>
+    <% recipes.forEach(recipe => { %>
+      <div class="recipe-card">
+        <h3><%= recipe.name %></h3>
+        <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
+        <p><strong>Directions:</strong> <%= recipe.directions %></p>
+      </div>
+    <% }) %>
+  <% } %>
+</body>
+</html>
