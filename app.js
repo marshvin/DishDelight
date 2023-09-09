@@ -3,7 +3,7 @@ const pg = require('pg');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
-
+//connect to postgresql database
 const connect = "postgres://postgres:1234@localhost/Recipedb";
 const client = new pg.Client(connect);
 
